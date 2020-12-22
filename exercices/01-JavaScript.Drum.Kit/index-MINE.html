@@ -61,26 +61,33 @@
 
   <script>
     //1. listen on keydown even of on all key div elements
-    window.addEventListener("keydown", event => {
+    window.addEventListener("keydown", function (event) {
       console.log(event);
-      //2. read the data-key value
+      //2a. reset the keys => get nodde list then convert to array using spread
+      const [...keyElems] = document.querySelectorAll('.key');
+      console.log(keyElems);
+      keyElems.map(key => key.classList.remove("playing"));
+      //2b. read the data-key value
       const keyElem = document.querySelector(`div[data-key="${event.keyCode}"]`);
-
-      if (keyElem == null) {
+      if (!keyElem) {
         console.log(`Key ${event.key.toUpperCase()} is not mapped!`)
         return;
       }
 
       //3. find the audio element matching the key
       const audioKeyElem = document.querySelector(`audio[data-key="${event.keyCode}"]`);
-      if (audioKeyElem == null) {
+      if (!audioKeyElem) {
         console.log(`Key ${event.key.toUpperCase()} doesn't have a audio file!`)
         return;
       }
 
       //4. play the audio and style the div element
-      keyElem.classList.add(".playing");
+      //fix the bug when you hit the key in rapid succession
+      //by rewinding to the start!
+      audioKeyElem.currentTime = 0;
       audioKeyElem.play();
+      keyElem.classList.add("playing");
+
     })
   </script>
 
