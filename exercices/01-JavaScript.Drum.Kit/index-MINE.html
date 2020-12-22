@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 
@@ -57,10 +59,32 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    //1. listen on keydown even of on all key div elements
+    window.addEventListener("keydown", event => {
+      console.log(event);
+      //2. read the data-key value
+      const keyElem = document.querySelector(`div[data-key="${event.keyCode}"]`);
 
-</script>
+      if (keyElem == null) {
+        console.log(`Key ${event.key.toUpperCase()} is not mapped!`)
+        return;
+      }
+
+      //3. find the audio element matching the key
+      const audioKeyElem = document.querySelector(`audio[data-key="${event.keyCode}"]`);
+      if (audioKeyElem == null) {
+        console.log(`Key ${event.key.toUpperCase()} doesn't have a audio file!`)
+        return;
+      }
+
+      //4. play the audio and style the div element
+      keyElem.classList.add(".playing");
+      audioKeyElem.play();
+    })
+  </script>
 
 
 </body>
+
 </html>
