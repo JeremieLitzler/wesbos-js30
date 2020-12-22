@@ -101,7 +101,7 @@
         console.log(event);
         //but only the transform end event
         if (event.propertyName !== "transform") return;
-
+        //reset the css class
         key.classList.remove("playing");
       })
     });
