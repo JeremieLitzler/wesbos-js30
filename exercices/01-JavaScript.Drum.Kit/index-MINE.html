@@ -63,10 +63,12 @@
     //1. listen on keydown even of on all key div elements
     window.addEventListener("keydown", function (event) {
       console.log(event);
-      //2a. reset the keys => get nodde list then convert to array using spread
-      const [...keyElems] = document.querySelectorAll('.key');
-      console.log(keyElems);
-      keyElems.map(key => key.classList.remove("playing"));
+      //2a. reset the keys => get node list then convert to array using spread
+      //Not the proper solution because you need to type another key 
+      //to reset the previously pressed key
+      // const [...keyElems] = document.querySelectorAll('.key');
+      // console.log(keyElems);
+      // keyElems.map(key => key.classList.remove("playing"));
       //2b. read the data-key value
       const keyElem = document.querySelector(`div[data-key="${event.keyCode}"]`);
       if (!keyElem) {
@@ -89,6 +91,20 @@
       keyElem.classList.add("playing");
 
     })
+
+    //get node list then convert to array using spread
+    const [...keyElems] = document.querySelectorAll('.key');
+    console.log(keyElems);
+    keyElems.map(key => { //equivalent of forEach
+      key.addEventListener("transitionend", event => {
+        //listener the transition end events
+        console.log(event);
+        //but only the transform end event
+        if (event.propertyName !== "transform") return;
+
+        key.classList.remove("playing");
+      })
+    });
   </script>
 
 
