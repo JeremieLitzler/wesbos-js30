@@ -47,4 +47,26 @@ The rotate animation takes the number of degrees.
 
 - 0 degree is 45min or 45 seconds or 9h.
 - 180 degrees is 15min or 15 seconds or 3h.
+- 0 degree = 360 degree
 - etc...
+
+We could also rotate all hands by 90 degrees to set the noon/midnight time.
+
+## Time to run the script
+
+Doing the following shows that the 1 second interval between each run of the script results in an issue:
+
+```js
+function setDate() {
+  const now = new Date();
+  const second = now.getSeconds();
+  const minute = now.getMinutes();
+  const hour = now.getHours();
+  const ms = now.getMilliseconds();
+  console.log(`It is ${hour}:${minute}:${second} (${ms})`);
+}
+
+setInterval(setDate, 1000);
+```
+
+See [the DevTools console logs](DevTools.logs.md).
