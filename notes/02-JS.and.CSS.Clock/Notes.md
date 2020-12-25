@@ -70,3 +70,8 @@ setInterval(setDate, 1000);
 ```
 
 See [the DevTools console logs](DevTools.logs.md).
+
+We would need to perform some checks to:
+
+- move the seconds hand all the time
+- check the milliseconds value before the rotation to avoid the cases where the hand won't move.
