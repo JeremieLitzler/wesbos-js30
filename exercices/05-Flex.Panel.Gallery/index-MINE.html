@@ -133,7 +133,14 @@
   </div>
 
   <script>
+    const panelPs = document.querySelectorAll(".panel p");
+    panelPs.forEach(paragraph => paragraph.addEventListener("click", function (event) {
+      console.log(paragraph);
+      console.log(paragraph.parentElement);
 
+      console.log(paragraph.previousElementSibling);
+      console.log(paragraph.nextElementSibling);
+    }));
   </script>
 
 
