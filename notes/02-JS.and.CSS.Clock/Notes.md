@@ -1,5 +1,9 @@
 # Notes
 
+[< Back to table of content](../README.md) |
+[View previous exercice's notes >](../01-JavaScript.Drum.Kit/Notes.md) |
+[View next exercice's notes >](../03-CSS.Variables/Notes.md)
+
 ## Instructions
 
 Make the hands **rotate** based on the current time.

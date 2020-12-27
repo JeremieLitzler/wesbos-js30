@@ -1,5 +1,8 @@
 # Notes
 
+[< Back to table of content](../README.md) |
+[View next exercice's notes >](../02-JS.and.CSS.Clock/Notes.md)
+
 ## Mapping a keyboard
 
 [See http://keycode.info/](http://keycode.info/).
