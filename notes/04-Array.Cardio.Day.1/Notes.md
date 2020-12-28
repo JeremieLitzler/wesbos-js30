@@ -9,3 +9,5 @@ The point of the exercice is to master the array functions `filter`, `map`, `sor
 It will help master JavaScript more.
 
 [See the exercices](../../exercices/04-Array.Cardio.Day.1/index-MINE.html).
+
+[See day 2](../07-Array.Cardio.Day.2/Notes.md).
