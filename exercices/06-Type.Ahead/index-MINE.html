@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+    /**
+     * Build a li as raw html using the element data
+     *
+     * @param place object: the element containing the data to populate the li element
+     * @param input string: the input of the user to highlight it in the city and state name
+     * @returns string (li element as html)
+     */
+    function makeRawLiHtml(place, input) {
+      const regexInputHighlight = new RegExp(input, 'gi'); //gi = global and insensitive.
+      const cityNameFormatted =
+        place.city.replace(regexInputHighlight, `<span class="hl">${input}</span>`);
+      const stateNameFormatted =
+        place.state.replace(regexInputHighlight, `<span class="hl">${input}</span>`);
+
+      //default formatting
+      let formattedPopulation = new Intl.NumberFormat("en").format(place.population);
+      if (navigator.language) {
+        formattedPopulation = new Intl.NumberFormat(navigator.language).format(place.population);
+      }
+
+      const html = `<li>
+        <span class="name">${cityNameFormatted}, ${stateNameFormatted}</span>
+        <span class="population">${formattedPopulation}</span>
+        </li>`;
+      return html;
+    }
+
+    /**
+     * Check if the element's city or state contains the input of the user.
+     * The check is not case sensitive
+     * 
+     * @param element object: the element to check
+     * @param input string: the input of the user
+     * @returns true | false
+     */
+    function isMatch(element, input) {
+      if (element.city.toLowerCase().includes(input.toLowerCase()))
+        return true;
+
+      if (element.state.toLowerCase().includes(input.toLowerCase()))
+        return true;
+
+      return false;
+    }
+
+    const input = document.querySelector(".search");
+    const suggestionsUl = document.querySelector(".suggestions");
+    input.addEventListener("input", function (event) {
+      fetch(endpoint)
+        .then(response => response.json())
+        .then(data => {
+          //console.table(data)
+          const placesHtml = data
+            .filter(element => isMatch(element, input.value))
+            .map(element => makeRawLiHtml(element, input.value));
+
+          suggestionsUl.innerHTML = placesHtml.join("");
+        })
+        .catch(err => console.error(err));
+
+    })
+  </script>
+</body>
+
+</html>
