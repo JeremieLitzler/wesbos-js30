@@ -49,7 +49,8 @@
       font-size: 20px;
       background-size: cover;
       background-position: center;
-      width: 100%;
+      flex: 1;
+      /* or width: 100%;*/
       display: flex;
       flex-direction: column;
       justify-content: space-around;
@@ -89,9 +90,20 @@
       font-size: 2em;
     }
 
-    .panel p:first-child,
+    .panel p:first-child {
+      transform: translateY(-1000%);
+    }
+
     .panel p:last-child {
-      display: none;
+      transform: translateY(1000%);
+    }
+
+    .panel.opened p:first-child {
+      transform: translateY(0);
+    }
+
+    .panel.opened p:last-child {
+      transform: translateY(0)
     }
 
     .panel p:nth-child(2) {
@@ -100,6 +112,7 @@
 
     .panel.open {
       font-size: 40px;
+      flex: 5;
     }
   </style>
 
@@ -133,14 +146,22 @@
   </div>
 
   <script>
-    const panelPs = document.querySelectorAll(".panel p");
-    panelPs.forEach(paragraph => paragraph.addEventListener("click", function (event) {
-      console.log(paragraph);
-      console.log(paragraph.parentElement);
+    const panelPs = document.querySelectorAll(".panel");
 
-      console.log(paragraph.previousElementSibling);
-      console.log(paragraph.nextElementSibling);
-    }));
+    function tooglePanel() {
+      this.classList.toggle("open");
+    }
+
+    function toogleWords(event) {
+      //what are the events?
+      // => font-size
+      // => flex-grow (or just flex on Safari!)
+      if (event.propertyName.includes("flex")) {
+        this.classList.toggle("opened");
+      }
+    }
+    panelPs.forEach(paragraph => paragraph.addEventListener("click", tooglePanel));
+    panelPs.forEach(paragraph => paragraph.addEventListener("transitionend", toogleWords));
   </script>
 
 
