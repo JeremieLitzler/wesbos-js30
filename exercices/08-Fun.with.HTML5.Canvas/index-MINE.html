@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    const canvas = document.querySelector("#draw");
+    const context = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    context.strokeStyle = "#BADA55";
+    context.lineJoin = "round";
+    context.lineCap = "round";
+    context.lineWidth = 100;
+
+    //stores the fact we are drawing, e.g. the mouse is clicked.
+    let isDrawing = false;
+    //store the coordonnates of the drawing
+    let lastX = 0;
+    let lastY = 0;
+    //value of the hue: https://mothereffinghsl.com/
+    let hue = 0
+    //flag to increase the line drawn
+    let lineWidthGrowing = true;
+
+    function draw(event) {
+      if (!isDrawing) return; //stop the drawing
+      console.log(event);
+
+      //0 or 360 is red
+      //See https://mothereffinghsl.com/
+      context.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+      context.beginPath();
+      //start from
+      context.moveTo(lastX, lastY);
+      //go to
+      context.lineTo(event.offsetX, event.offsetY);
+      context.stroke();
+      [lastX, lastY] = [event.offsetX, event.offsetY];
+
+      hue++;
+      if (hue >= 360) hue = 0;
+
+      if (context.lineWidth >= 100 || context.lineWidth <= 10)
+        lineWidthGrowing = !lineWidthGrowing;
+
+      if (lineWidthGrowing)
+        context.lineWidth++;
+      else
+        context.lineWidth--;
+
+      console.log("context.lineWidth", context.lineWidth);
+    }
+
+    canvas.addEventListener("mousedown", (event) => {
+      isDrawing = true;
+      [lastX, lastY] = [event.offsetX, event.offsetY];
+    });
+
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", () => isDrawing = false);
+    canvas.addEventListener("mouseout", () => isDrawing = false);
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      cursor: pointer;
+    }
+  </style>
+
+</body>
+
+</html>
