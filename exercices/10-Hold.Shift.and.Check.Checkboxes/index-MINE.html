@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hold Shift to Check Multiple Checkboxes</title>
+</head>
+
+<body>
+  <style>
+    html {
+      font-family: sans-serif;
+      background: #ffc600;
+    }
+
+    .inbox {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #F1F1F1;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+    }
+
+    input:checked+p {
+      background: #F9F9F9;
+      text-decoration: line-through;
+    }
+
+    input[type="checkbox"] {
+      margin: 20px;
+    }
+
+    p {
+      margin: 0;
+      padding: 20px;
+      transition: background 0.2s;
+      flex: 1;
+      font-family: 'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border-left: 1px solid #D1E2FF;
+    }
+  </style>
+  <!--
+   The following is a common layout you would see in an email client.
+
+   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+
+  -->
+  <div class="inbox">
+    <div class="item">
+      <input type="checkbox">
+      <p>This is an inbox layout.</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Check one item</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Hold down your Shift key</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Check a lower item</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Everything in between should also be set to checked</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Try to do it without any libraries</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Just regular JavaScript</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Good Luck!</p>
+    </div>
+    <div class="item">
+      <input type="checkbox">
+      <p>Don't forget to tweet your result!</p>
+    </div>
+  </div>
+
+  <script>
+    //select checkboxes
+    const checkboxes = document.querySelectorAll("input[type=checkbox]");
+
+    const top2bottom = "t2b";
+    const bottom2top = "b2t";
+    //save the last 3 checkboxes selected
+    //the oldest
+    let firstCheckbox = undefined;
+    //the one before the last
+    let beforeLastCheckbox = undefined;
+    //the one just clicked
+    let lastCheckbox = undefined;
+
+    function evaluateDirection() {
+      console.log("first", firstCheckbox.offsetTop);
+      console.log("last", lastCheckbox.offsetTop);
+      //we need to:
+      // => find the index of the first selected
+      const firstIndex =
+        firstCheckbox === undefined ?
+        undefined :
+        Array.from(checkboxes).findIndex(item => item.offsetTop === firstCheckbox.offsetTop);
+      // => find the index of the second selected
+      const lastIndex =
+        lastCheckbox === undefined ?
+        firstIndex :
+        Array.from(checkboxes).findIndex(item => item.offsetTop === lastCheckbox.offsetTop);
+      console.log("first", firstIndex, "last", lastIndex);
+      //find the direction: index of second selected - index of last selected
+      // => if the result is positive, direction is top to bottom
+      // => if the result is positive, direction is bottom to top
+      const direction = firstIndex < lastIndex ? top2bottom : bottom2top;
+      console.log(direction);
+      return direction;
+    }
+
+    // => find the items between the checkboxes selected
+    function flagElements(direction) {
+      let fromEl = undefined;
+      let toEl = undefined;
+      if (direction === top2bottom) {
+        fromEl = firstCheckbox;
+        toEl = lastCheckbox;
+      } else {
+        fromEl = lastCheckbox;
+        toEl = firstCheckbox;
+      }
+      const expectations = [...checkboxes].map(item => {
+        if (item.offsetTop >= fromEl.offsetTop && item.offsetTop <= toEl.offsetTop) {
+          return {
+            item,
+            shouldCheck: true
+          };
+        }
+        return {
+          item,
+          shouldCheck: false
+        };
+      });
+      console.log(expectations);
+      return {
+        fromEl,
+        toEl,
+        expectations
+      };
+    }
+
+    function checkInBetween(event, lastElementSelected) {
+      lastCheckbox = lastElementSelected;
+
+      if (!event.shiftKey || !lastCheckbox.checked) {
+        return;
+      }
+      console.log("shift key hold and checked");
+      const direction = evaluateDirection();
+
+      const result = flagElements(direction);
+      result.expectations.forEach(expectation => {
+        if (expectation.shouldCheck)
+          expectation.item.checked = true;
+        if (!expectation.shouldCheck)
+          expectation.item.checked = false;
+      })
+    }
+
+    function handleCheck(event) {
+      console.log(event);
+      console.dir(this);
+
+      checkInBetween(event, this)
+      if (beforeLastCheckbox !== undefined)
+        beforeLastCheckbox = firstCheckbox;
+      else
+        firstCheckbox = this;
+    }
+
+
+
+
+    //add a listener on checkbox "checked"
+    checkboxes.forEach(checkbox => checkbox.addEventListener("click", handleCheck));
+  </script>
+</body>
+
+</html>
