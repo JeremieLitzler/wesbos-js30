@@ -13,11 +13,21 @@ console.assert(playbackSpdCursor !== undefined);
 console.assert(skipBtns !== undefined);
 console.assert(skipBtns.length === 2);
 
+console.dir(videoEl);
+
 let paused = true;
 let spacePressed = false;
 let skipValue = 0;
 videoEl.currentTime = 0;
 
+function play() {
+  paused = false;
+  console.log("Let's play!");
+  videoEl.play();
+  console.log(videoEl.currentTime);
+
+  console.log('Playing!');
+}
 /**
  * Pause the video
  */
@@ -29,41 +39,35 @@ function pause() {
 
   paused = true;
 }
-
+function handleSkip(skipElement) {
+  if (skipElement.dataset !== undefined && skipElement.dataset.skip) {
+    console.log(`${skipElement.dataset.skip}`);
+    const newCurrentTime = videoEl.currentTime + skipElement.dataset.skip;
+    if (newCurrentTime <= 0) {
+      console.log("can't go to negative value!");
+      return;
+    }
+    videoEl.currentTime += parseInt(skipElement.dataset.skip);
+    console.log(videoEl.currentTime);
+    return;
+  }
+}
 /**
  * Control the playback from clicking the play button.
  * Also, pressing space bar pause and stop the video.
  */
 function controlPlayback(event) {
-  if (this.dataset !== undefined && this.dataset.skip) {
-    console.log(`${this.dataset.skip}`);
-    const newCurrentTime = videoEl.currentTime + this.dataset.skip;
-    if (newCurrentTime <= 0) {
-      console.log("can't go to negative value!");
-      return;
-    }
-    videoEl.currentTime += this.dataset.skip;
-    console.log(videoEl.currentTime);
-    return;
-  }
-
   spacePressed = event.keycode === 32;
 
+  handleSkip(this);
   //pause using the space bar
   if (spacePressed) paused = !paused;
-
   //pause the video if it is isn't
   if (!paused) {
     return pause();
   }
-
   //otherwise, play it!
-  paused = false;
-  console.log("Let's play!");
-  videoEl.play();
-  console.log(videoEl.currentTime);
-
-  console.log('Playing!');
+  play();
 }
 
 playBtn.addEventListener('click', controlPlayback);
@@ -71,3 +75,5 @@ window.addEventListener('keydown', controlPlayback);
 skipBtns.forEach((skipBtn) => {
   skipBtn.addEventListener('click', controlPlayback);
 });
+volumeCursor.addEventListener('', controlPlayback);
+playbackSpdCursor.addEventListener('', controlPlayback);
