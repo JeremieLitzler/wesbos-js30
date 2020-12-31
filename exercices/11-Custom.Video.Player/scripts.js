@@ -52,6 +52,13 @@ function handleSkip(skipElement) {
     return;
   }
 }
+
+function handleVolume(cursor) {
+  return;
+}
+function handlePlaybackSpeed(cursor) {
+  return;
+}
 /**
  * Control the playback from clicking the play button.
  * Also, pressing space bar pause and stop the video.
