@@ -12,13 +12,16 @@
 
 We need to able:
 
-- use a playback cursor to select a moment in the video
-- use a volume cursor to increase or decrease the volume
-- use a cursor to increase or decrease the playback speed
-- use a button to go back 10 seconds in the current playback time
-- use a button to go forward 25 seconds in the current playback time
-- play or stop the video when clicking on the container or the play button in the bottom left.
+- display the current time in the progress bar => done
+- use the progress bar to select a time in the video on clik on the progress bar =>
+- use the progress bar to select a time in the video on drag and drop on the progress bar =>
+- use a playback cursor to select a moment in the video => done
+- use a volume cursor to increase or decrease the volume => done
+- use a cursor to increase or decrease the playback speed => done
+- use a button to go back 10 seconds in the current playback time => done
+- use a button to go forward 25 seconds in the current playback time => done
+- play or stop the video when clicking on the container or the play button in the bottom left => done
 
 BONUS:
 
-- play the video on SPACE press
+- control the playback using the keyboard => done
