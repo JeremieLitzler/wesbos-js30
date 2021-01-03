@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+
+<body>
+  <script>
+    let pressedKeys = [];
+    const wordToDetect = "Jeremie";
+
+    window.addEventListener("keydown", function (event) {
+      console.log(event);
+      //push the key pressed
+      pressedKeys.push(event.key);
+      //but never excede the wordToDetect length's.
+      //which mean to remove the first element of the array
+      //once the size of the array is greater than the length of the string
+      if (pressedKeys.length > wordToDetect.length)
+        pressedKeys.shift();
+      if (pressedKeys.join("") === wordToDetect) {
+        cornify_add();
+      }
+      console.log(pressedKeys);
+    });
+  </script>
+</body>
+
+</html>
