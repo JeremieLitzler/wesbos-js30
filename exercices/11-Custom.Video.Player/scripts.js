@@ -169,9 +169,11 @@ progressContainer.addEventListener('click', setProgress);
  * With the help of Wes!
  */
 let mouvedown = false;
+//call setProgress only if mouse is down
 progressContainer.addEventListener(
   'mousemove',
   (event) => mouvedown && setProgress(event),
 );
+// update the flag
 progressContainer.addEventListener('mousedown', () => (mouvedown = true));
 progressContainer.addEventListener('mouseup', () => (mouvedown = false));
