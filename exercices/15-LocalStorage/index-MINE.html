@@ -34,24 +34,45 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
-    <button class="clear">Clear persitent storage</button>
+    <button class="clear">Clear storage</button>
+    <button class="batch-check" data-action="check">Check All</button>
+    <button class="batch-check" data-action="uncheck">Uncheck All</button>
   </div>
 
   <script>
     const addItems = document.querySelector('.add-items');
     const plates = document.querySelector(".plates");
     const clearLs = document.querySelector(".clear");
+    const batchChecks = document.querySelectorAll(".batch-check");
 
     const keyStore = "items";
-    const items = JSON.parse(localStorage.getItem(keyStore)) || [];
+
+    function readData() {
+      return JSON.parse(localStorage.getItem(keyStore)) || [];
+    }
+    //Local storage only accepts a key value pair 
+    //Where the value must be a string
+    //So let's deserialize the JSON string to the original JS type
+    const items = readData();
+
+    function saveData(newData) {
+      //Local storage only accepts a key value pair
+      //Where the value must be a string
+      //So let's serialize the original JS type to JSON string
+      localStorage.setItem(keyStore, JSON.stringify(newData));
+    }
 
     function populateList(items) {
-      if (items.length === 0) return;
-      plates.innerHTML = [...items].map(item => {
+      if (items.length === 0) {
+        plates.innerHTML = "<li>Loading Tapas...<li>";
+        return;
+      }
+
+      plates.innerHTML = [...items].map((item, index) => {
         return `
         <li>
-          <input name="dish" type="checkbox" />
-          <label for="dish">${item.name}</label>
+          <input name="dish${index}" data-id="${index}" type="checkbox" ${item.checked ? "checked" : ""}/>
+          <label for="dish${index}">${item.name}</label>
           </li>`;
       }).join("");
     }
@@ -59,29 +80,53 @@
     function addItem(event) {
       event.preventDefault(); //prevent the reload
       const item = {
-        name: this.querySelector('input[name="item"').value,
+        name: this.querySelector('input[name="item"]').value,
         checked: false
       };
       console.log(item);
       items.push(item);
       populateList(items);
       console.table(items);
-      localStorage.setItem(keyStore, JSON.stringify(items));
+      saveData(items);
       this.reset();
-      this.querySelector('input[name="item"').focus();
+      this.querySelector('input[name="item"]').focus();
     }
 
     function toggleCheckBox(event) {
       console.log(event);
-      const index = items.findIndex(item => item === this.innerHTML);
-      console.log(index);
+      console.dir(event.target);
+      let itemId = undefined;
+      if (event.target.matches("input")) { //when the user clicks the checkbox
+        console.assert(event.target.dataset != undefined || event.target.dataset != null, "Input should have a data-id attribute");
+        itemId = event.target.dataset.id;
+      }
+      if (event.target.matches("label")) { //when the user clicks the label related to a checkbox
+        const input = document.querySelector(`[name="${event.target.htmlFor}"]`);
+        console.assert(input !== null, "input should be found");
+        console.assert(event.target.dataset != undefined || event.target.dataset != null, "Input should have a data-id attribute");
+        itemId = input.dataset.id;
+      }
+      items[itemId].checked = !items[itemId].checked;
+      saveData(items);
+      populateList(items);
     }
     addItems.addEventListener("submit", addItem);
     plates.addEventListener("click", toggleCheckBox);
     clearLs.addEventListener("click", function () {
       localStorage.removeItem(keyStore);
-      document.location = document.location;
+      populateList([]);
     })
+    batchChecks.forEach(batchCheck => {
+      batchCheck.addEventListener("click", function () {
+        const items = readData();
+        const updatedItems = [...items].map(item => {
+          item.checked = batchCheck.dataset.action === "check" ? true : false;
+          return item;
+        })
+        saveData(updatedItems);
+        populateList(updatedItems);
+      });
+    });
 
     populateList(items);
   </script>
