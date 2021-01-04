@@ -10,5 +10,3 @@ We will learn about:
 
 - Local Storage
 - Event delegation
-
-##
