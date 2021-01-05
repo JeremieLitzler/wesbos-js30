@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Mouse Shadow</title>
 </head>
+
 <body>
 
   <div class="hero">
@@ -11,30 +13,66 @@
   </div>
 
   <style>
-  html {
-    color: black;
-    font-family: sans-serif;
-  }
+    html {
+      color: black;
+      font-family: sans-serif;
+    }
 
-  body {
-    margin: 0;
-  }
+    body {
+      margin: 0;
+    }
 
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-  }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+    }
 
-  h1 {
-    text-shadow: 10px 10px 0 rgba(0,0,0,1);
-    font-size: 100px;
-  }
+    h1 {
+      text-shadow: 10px 10px 0 rgba(0, 0, 0, 1);
+      font-size: 100px;
+    }
   </style>
 
-<script>
-</script>
+  <script>
+    const hero = document.querySelector(".hero");
+    const h1 = hero.querySelector("h1");
+    const walkPx = 200;
+
+    function updateTextShadow(event) {
+      //console.dir(event.target);
+      const {
+        offsetWidth: width,
+        offsetHeight: height,
+      } = hero
+
+      //where is the cursor
+      let {
+        offsetX: x,
+        offsetY: y
+      } = event;
+      if (this !== event.target) {
+        //fix the x and y values since target is h1 when hovering h1 otherwise hero
+        x = x + event.target.offsetLeft;
+        y = y + event.target.offsetTop;
+      }
+
+      const xWalk = Math.round((x / width * walkPx) - (walkPx / 2));
+      const yWalk = Math.round((y / height * walkPx) - (walkPx / 2));
+      console.log(xWalk, yWalk);
+
+      h1.style.textShadow = `
+       ${xWalk}px ${yWalk}px 0 rgba(255, 255, 0, 0.5),
+       ${-1 * xWalk}px ${yWalk}px 0 rgba(255, 0, 255, 0.5),
+       ${yWalk}px ${-1 * xWalk}px 0 rgba(0, 255, 255, 0.5),
+       ${-1 * yWalk}px ${xWalk}px 0 rgba(240, 240, 0, 0.5)`;
+    }
+
+    //listen to movemouse
+    hero.addEventListener("mousemove", updateTextShadow);
+  </script>
 </body>
+
 </html>
