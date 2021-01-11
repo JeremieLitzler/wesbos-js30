@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Detection</title>
+</head>
+
+<body>
+
+  <div class="synthetized" contenteditable>
+  </div>
+
+  <script>
+    var synthetizedText = document.querySelector(".synthetized");
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!window.SpeechRecognition) {
+      var unsupported = document.createElement('p');
+      unsupported.style.fontSize = '2rem';
+      var message =
+        "Your browser doesn't support window.SpeechRecognition" +
+        '<br />' +
+        'See <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition" target="_blank"> MDN documentation</a>.' +
+        '<br />' +
+        'Use <a href="https://www.google.com/search?q=chromium+browser" target="_blank">a Chromium based browser!</a>';
+      unsupported.innerHTML = message;
+      document.body.appendChild(unsupported);
+      synthetizedText.style.display = 'none';
+      throw message;
+    }
+
+    const controls = {
+      "delete": [{
+          "fr-FR": "supprimer"
+        },
+        {
+          "en-US": "delete"
+        },
+      ],
+      "copy": [{
+          "fr-FR": "copier"
+        },
+        {
+          "en-US": "copy"
+        },
+      ],
+    }
+    const speechWorker = new SpeechRecognition();
+    //we set to true so we can obtain 
+    //the speech recognition result as we go
+    speechWorker.interimResults = true;
+    //what language does the worker speak
+    speechWorker.lang = navigator.language;
+
+    let p = document.createElement("p");
+    synthetizedText.append(p);
+
+    function deleteLast(transcript) {
+      const deleteCtrl = controls.delete.find(value => value[navigator.language]);
+      if (transcript === deleteCtrl[navigator.language]) {
+        console.log(synthetizedText.childNodes);
+        const lastTranscript = synthetizedText.lastChild;
+
+        if (lastTranscript === undefined) return true;
+
+        console.log(lastTranscript.innerText);
+        synthetizedText.removeChild(lastTranscript);
+        return true;
+      }
+
+    }
+
+    function copyLast(transcript) {
+      const deleteCtrl = controls.copy.find(value => value[navigator.language]);
+      if (transcript === deleteCtrl[navigator.language]) {
+        console.log(synthetizedText.childNodes);
+        const lastTranscript = synthetizedText.lastChild;
+
+        if (lastTranscript === undefined) return true;
+        console.log(lastTranscript.innerText);
+        synthetizedText.append(lastTranscript);
+        return true;
+      }
+
+    }
+
+    function copy(transcript) {
+
+    }
+    speechWorker.addEventListener("result",
+      function (event) {
+        // the text synthetized is found in 
+        //event.results[0][0].transcript
+        console.log(event.results[0][0].transcript);
+
+        const transcript = [...event.results].map(result => result[0]).map(result => result.transcript).join("");
+
+        if (deleteLast(transcript)) return;
+        if (copyLast(transcript)) return;
+
+        if (event.results[0].isFinal) {
+          p = document.createElement("p");
+          p.innerText = transcript;
+          synthetizedText.append(p);
+        }
+      })
+
+    //restart speechWorker after it is done capturing the speaker
+    speechWorker.addEventListener('end', speechWorker.start);
+
+    //the speech worker needs to start listening
+    speechWorker.start();
+  </script>
+
+
+  <style>
+    html {
+      font-size: 10px;
+    }
+
+    body {
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-weight: 200;
+      font-size: 20px;
+    }
+
+    .synthetized {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+      padding: 1rem 2rem 1rem 5rem;
+      background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
+      background-size: 100% 3rem;
+      position: relative;
+      line-height: 3rem;
+    }
+
+    p {
+      margin: 0 0 3rem;
+    }
+
+    .synthetized:before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      top: 0;
+      left: 30px;
+      bottom: 0;
+      border: 1px solid;
+      border-color: transparent #efe4e4;
+    }
+  </style>
+
+</body>
+
+</html>
