@@ -8,6 +8,13 @@
 
 <body>
 
+  <h1>Hire your transcript worker, for free!</h1>
+  <p>You have 3 available (vocal) commands if your Accept-Language starts with <em><i>en</i></em> or <em><i>fr</i></em>:
+  <ul>
+    <li>"copy" or "copier"</li>
+    <li>"go back" or "supprimer"</li>
+    <li>"clean up" or "effacer tout"</li>
+  </ul>
   <div class="synthetized" contenteditable>
   </div>
 
@@ -57,9 +64,14 @@
     //the speech recognition result as we go
     speechWorker.interimResults = true;
     //what language does the worker speak
-    console.log("culture:", navigator.language);
-    speechWorker.lang = navigator.language;
+    const userLang = navigator.language.split('-')[0];
+    console.log("culture:", userLang);
+    speechWorker.lang = userLang;
 
+    if (userLang !== "en" || userLang !== "fr") {
+      alert("Your language is not supported! Your worker will understand English :) Thank you.");
+      speechWorker.lang = "en";
+    }
     function synthetizedLastResult(event) {
       const finalResult = event.results[0];
       return finalResult.isFinal;
