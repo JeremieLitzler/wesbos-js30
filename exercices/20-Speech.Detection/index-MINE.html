@@ -68,7 +68,7 @@
     console.log("culture:", userLang);
     speechWorker.lang = userLang;
 
-    if (userLang !== "en" || userLang !== "fr") {
+    if (userLang !== "en" && userLang !== "fr") {
       alert("Your language is not supported! Your worker will understand English :) Thank you.");
       speechWorker.lang = "en";
     }
