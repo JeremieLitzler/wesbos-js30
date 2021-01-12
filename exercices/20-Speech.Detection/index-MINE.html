@@ -111,9 +111,9 @@
 
     function findCommand(transcript) {
       //let run the command!
-      const cultureCommands = commands[navigator.language];
+      const cultureCommands = commands[userLang];
       if (!cultureCommands) {
-        console.warn(`No command for language "${navigator.language}"!`)
+        console.warn(`No command for language "${userLang}"!`)
         return;
       }
       let command = undefined;
