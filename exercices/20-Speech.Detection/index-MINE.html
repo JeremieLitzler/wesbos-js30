@@ -30,58 +30,108 @@
       throw message;
     }
 
-    const controls = {
-      "delete": [{
-          "fr-FR": "supprimer"
+    const commands = {
+      "fr": [{
+          reset: "effacer tout"
         },
         {
-          "en-US": "delete"
-        },
-      ],
-      "copy": [{
-          "fr-FR": "copier"
+          deleteLast: "supprimer"
         },
         {
-          "en-US": "copy"
+          copyLast: "copier"
+        }
+      ],
+      "en": [{
+          reset: "clean up"
+        },
+        {
+          deleteLast: "go back"
+        },
+        {
+          copyLast: "copy"
         },
       ],
-    }
+    };
     const speechWorker = new SpeechRecognition();
     //we set to true so we can obtain 
     //the speech recognition result as we go
     speechWorker.interimResults = true;
     //what language does the worker speak
+    console.log("culture:", navigator.language);
     speechWorker.lang = navigator.language;
 
-    let p = document.createElement("p");
-    synthetizedText.append(p);
+    function synthetizedLastResult(event) {
+      const finalResult = event.results[0];
+      return finalResult.isFinal;
+    }
+
+    function reset() {
+      synthetizedText.innerHTML = "";
+      return true;
+    }
 
     function deleteLast(transcript) {
-      const deleteCtrl = controls.delete.find(value => value[navigator.language]);
-      if (transcript === deleteCtrl[navigator.language]) {
-        console.log(synthetizedText.childNodes);
-        const lastTranscript = synthetizedText.lastChild;
+      //let run the command!
+      console.log(synthetizedText.childNodes);
+      const lastTranscript = synthetizedText.lastChild;
+      if (lastTranscript === undefined) return true;
 
-        if (lastTranscript === undefined) return true;
-
-        console.log(lastTranscript.innerText);
-        synthetizedText.removeChild(lastTranscript);
-        return true;
-      }
-
+      console.log(lastTranscript.innerText);
+      synthetizedText.removeChild(lastTranscript);
+      return true;
     }
 
     function copyLast(transcript) {
-      const deleteCtrl = controls.copy.find(value => value[navigator.language]);
-      if (transcript === deleteCtrl[navigator.language]) {
-        console.log(synthetizedText.childNodes);
-        const lastTranscript = synthetizedText.lastChild;
+      const lastTranscript = synthetizedText.lastChild;
 
-        if (lastTranscript === undefined) return true;
-        console.log(lastTranscript.innerText);
-        synthetizedText.append(lastTranscript);
+      if (lastTranscript === undefined) {
+        //if there is no note
         return true;
       }
+      console.log(lastTranscript.innerText);
+      addNewParagraph(lastTranscript.innerText);
+      return true;
+    }
+
+    function dispatchCommand(funcName) {
+      return this[funcName].apply(this, Array.prototype.slice.call(arguments, 1));
+    }
+
+    function findCommand(transcript) {
+      //let run the command!
+      const cultureCommands = commands[navigator.language];
+      if (!cultureCommands) {
+        console.warn(`No command for language "${navigator.language}"!`)
+        return;
+      }
+      let command = undefined;
+      for (const cultureCommand of cultureCommands) {
+        const cultureCommandArr = [...Object.entries(cultureCommand)[0]];
+        //console.log(cultureCommand);
+        console.assert(cultureCommandArr.length, "check the command definition. it must be an object of following format: { command: \"word triggering the command\"");
+        const isCommandMatch = cultureCommandArr.some((cmdPart) => {
+          //console.log("commandPart", cmdPart);
+          const result = cmdPart === transcript;
+          //console.log("result:", result);
+          return result;
+        });
+        if (isCommandMatch) {
+          command = cultureCommandArr[0];
+          console.log("commande found!", command);
+          break;
+        }
+      }
+      if (command === undefined) return false;
+
+      const dispatchResult = dispatchCommand(command, transcript);
+      console.log("dispatchResult", dispatchResult);
+      return dispatchResult;
+    }
+
+    function addNewParagraph(transcript) {
+      p = document.createElement("p");
+      p.innerText = transcript;
+      synthetizedText.append(p);
     }
     speechWorker.addEventListener("result",
       function (event) {
@@ -89,25 +139,22 @@
         //event.results[0][0].transcript
         console.log(event.results[0][0].transcript);
 
-        const result = [...event.results]
+        const transcript = [...event.results]
           .map(result => result[0]) //SpeechRecognitionResult
-          .map(result => result); //SpeechRecognitionAlternative
+          .map(result => result.transcript) //SpeechRecognitionAlternative
+          .join(""); //build the sentence from each SpeechRecognitionAlternative
 
-        console.log("Object", result);
+        if (!synthetizedLastResult(event)) return;
+        if (findCommand(transcript)) return;
 
-        if (result.confidence > 0.9) {
+        const finalResult = event.results[0];
+        console.log(finalResult[0].confidence);
+        if (finalResult[0].confidence < 0.7) {
           console.warn("Speak more clearly :-)");
           return;
         }
-        const transcript = result.join("");
-        if (deleteLast(transcript)) return;
-        if (copyLast(transcript)) return;
-
-        if (event.results[0].isFinal) {
-          p = document.createElement("p");
-          p.innerText = transcript;
-          synthetizedText.append(p);
-        }
+        //Ok to update the notes
+        addNewParagraph(transcript);
       })
 
     //restart speechWorker after it is done capturing the speaker
