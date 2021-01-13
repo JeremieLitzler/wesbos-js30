@@ -2,221 +2,78 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Speech Detection</title>
 </head>
 
 <body>
 
   <h1>Hire your transcript worker, for free!</h1>
+  <h2 class="worker-lang"></h2>
   <p>You have 3 available (vocal) commands if your Accept-Language starts with <em><i>en</i></em> or <em><i>fr</i></em>:
-  <ul>
-    <li>"copy" or "copier"</li>
-    <li>"go back" or "supprimer"</li>
-    <li>"clean up" or "effacer tout"</li>
-  </ul>
-  <div class="synthetized" contenteditable>
-  </div>
+    <ul>
+      <li>"copy" or "copier"</li>
+      <li>"go back" or "supprimer"</li>
+      <li>"clean up" or "effacer tout"</li>
+    </ul>
+    <label for="confidence">Set your worker confidence:</label>
+    <input type="range" name="confidence" min="0.5" max="1" step="0.01" id="confidence">
+    <div class="speak-up"></div>
+    <div class="synthetized" contenteditable>
+    </div>
 
-  <script>
-    var synthetizedText = document.querySelector(".synthetized");
-    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    <script src="app.js"></script>
 
-    if (!window.SpeechRecognition) {
-      var unsupported = document.createElement('p');
-      unsupported.style.fontSize = '2rem';
-      var message =
-        "Your browser doesn't support window.SpeechRecognition" +
-        '<br />' +
-        'See <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition" target="_blank"> MDN documentation</a>.' +
-        '<br />' +
-        'Use <a href="https://www.google.com/search?q=chromium+browser" target="_blank">a Chromium based browser!</a>';
-      unsupported.innerHTML = message;
-      document.body.appendChild(unsupported);
-      synthetizedText.style.display = 'none';
-      throw message;
-    }
-
-    const commands = {
-      "fr": [{
-          reset: "effacer tout"
-        },
-        {
-          deleteLast: "supprimer"
-        },
-        {
-          copyLast: "copier"
-        }
-      ],
-      "en": [{
-          reset: "clean up"
-        },
-        {
-          deleteLast: "go back"
-        },
-        {
-          copyLast: "copy"
-        },
-      ],
-    };
-    const speechWorker = new SpeechRecognition();
-    //we set to true so we can obtain 
-    //the speech recognition result as we go
-    speechWorker.interimResults = true;
-    //what language does the worker speak
-    const userLang = navigator.language.split('-')[0];
-    console.log("culture:", userLang);
-    speechWorker.lang = userLang;
-
-    if (userLang !== "en" && userLang !== "fr") {
-      alert("Your language is not supported! Your worker will understand English :) Thank you.");
-      speechWorker.lang = "en";
-    }
-    function synthetizedLastResult(event) {
-      const finalResult = event.results[0];
-      return finalResult.isFinal;
-    }
-
-    function reset() {
-      synthetizedText.innerHTML = "";
-      return true;
-    }
-
-    function deleteLast(transcript) {
-      //let run the command!
-      console.log(synthetizedText.childNodes);
-      const lastTranscript = synthetizedText.lastChild;
-      if (lastTranscript === undefined) return true;
-
-      console.log(lastTranscript.innerText);
-      synthetizedText.removeChild(lastTranscript);
-      return true;
-    }
-
-    function copyLast(transcript) {
-      const lastTranscript = synthetizedText.lastChild;
-
-      if (lastTranscript === undefined) {
-        //if there is no note
-        return true;
+    <style>
+      html {
+        font-size: 10px;
       }
-      console.log(lastTranscript.innerText);
-      addNewParagraph(lastTranscript.innerText);
-      return true;
-    }
 
-    function dispatchCommand(funcName) {
-      return this[funcName].apply(this, Array.prototype.slice.call(arguments, 1));
-    }
-
-    function findCommand(transcript) {
-      //let run the command!
-      const cultureCommands = commands[userLang];
-      if (!cultureCommands) {
-        console.warn(`No command for language "${userLang}"!`)
-        return;
+      body {
+        background: #ffc600;
+        font-family: 'helvetica neue';
+        font-weight: 200;
+        font-size: 20px;
       }
-      let command = undefined;
-      for (const cultureCommand of cultureCommands) {
-        const cultureCommandArr = [...Object.entries(cultureCommand)[0]];
-        //console.log(cultureCommand);
-        console.assert(cultureCommandArr.length, "check the command definition. it must be an object of following format: { command: \"word triggering the command\"");
-        const isCommandMatch = cultureCommandArr.some((cmdPart) => {
-          //console.log("commandPart", cmdPart);
-          const result = cmdPart === transcript;
-          //console.log("result:", result);
-          return result;
-        });
-        if (isCommandMatch) {
-          command = cultureCommandArr[0];
-          console.log("commande found!", command);
-          break;
-        }
+
+      .synthetized {
+        max-width: 500px;
+        margin: 50px auto;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+        padding: 1rem 2rem 1rem 5rem;
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
+        background-size: 100% 3rem;
+        position: relative;
+        line-height: 3rem;
       }
-      if (command === undefined) return false;
 
-      const dispatchResult = dispatchCommand(command, transcript);
-      console.log("dispatchResult", dispatchResult);
-      return dispatchResult;
-    }
+      p {
+        margin: 0 0 3rem;
+      }
 
-    function addNewParagraph(transcript) {
-      p = document.createElement("p");
-      p.innerText = transcript;
-      synthetizedText.append(p);
-    }
-    speechWorker.addEventListener("result",
-      function (event) {
-        // the text synthetized is found in 
-        //event.results[0][0].transcript
-        console.log(event.results[0][0].transcript);
+      .synthetized:before {
+        content: '';
+        position: absolute;
+        width: 4px;
+        top: 0;
+        left: 30px;
+        bottom: 0;
+        border: 1px solid;
+        border-color: transparent #efe4e4;
+      }
 
-        const transcript = [...event.results]
-          .map(result => result[0]) //SpeechRecognitionResult
-          .map(result => result.transcript) //SpeechRecognitionAlternative
-          .join(""); //build the sentence from each SpeechRecognitionAlternative
-
-        if (!synthetizedLastResult(event)) return;
-        if (findCommand(transcript)) return;
-
-        const finalResult = event.results[0];
-        console.log(finalResult[0].confidence);
-        if (finalResult[0].confidence < 0.7) {
-          console.warn("Speak more clearly :-)");
-          return;
-        }
-        //Ok to update the notes
-        addNewParagraph(transcript);
-      })
-
-    //restart speechWorker after it is done capturing the speaker
-    speechWorker.addEventListener('end', speechWorker.start);
-
-    //the speech worker needs to start listening
-    speechWorker.start();
-  </script>
-
-
-  <style>
-    html {
-      font-size: 10px;
-    }
-
-    body {
-      background: #ffc600;
-      font-family: 'helvetica neue';
-      font-weight: 200;
-      font-size: 20px;
-    }
-
-    .synthetized {
-      max-width: 500px;
-      margin: 50px auto;
-      background: white;
-      border-radius: 5px;
-      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
-      padding: 1rem 2rem 1rem 5rem;
-      background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
-      background-size: 100% 3rem;
-      position: relative;
-      line-height: 3rem;
-    }
-
-    p {
-      margin: 0 0 3rem;
-    }
-
-    .synthetized:before {
-      content: '';
-      position: absolute;
-      width: 4px;
-      top: 0;
-      left: 30px;
-      bottom: 0;
-      border: 1px solid;
-      border-color: transparent #efe4e4;
-    }
-  </style>
+      .speak-up {
+        display: none;
+        width: 20em;
+        margin: 0 auto;
+        padding: 1em;
+        background-color: white;
+        border: .5em solid #ff000055;
+        border-radius: .5em;
+      }
+    </style>
 
 </body>
 
