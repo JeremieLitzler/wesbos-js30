@@ -16,8 +16,11 @@ function highlightLink(event) {
   bubble.style.height = `${bounds.height}px`;
   bubble.style.padding = '1em';
   console.dir(window);
-  const translateX = bounds.left;
-  const translateY = bounds.top - 4; //4px to center the bubble
+  //when the user scrolls down, you will need to get the x and y of the scroll
+  //otherwise it will be off
+  //it seems ok without scrolling ;)
+  const translateX = bounds.left + window.scrollX;
+  const translateY = bounds.top + window.scrollY - 4; //4px to center the bubble
   bubble.style.transform = `translate(${translateX}px, ${translateY}px)`;
 }
 
