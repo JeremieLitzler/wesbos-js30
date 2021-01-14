@@ -18,3 +18,8 @@ We need to:
   - On the input event, set the SpeechSynthesisUtterance.rate or SpeechSynthesisUtterance.pitch on the speaker's instance
 - Bind the speak and stop buttons to what they need to do.
   - To start or stop the speaker, we can user [speak()](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis/speak) and [cancel](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis/cancel) of SpeechSynthesis object.
+
+BONUS :
+
+- Transform the Speak button as paused and resume button
+- Load the speaker with the default selection of voice, rate and pitch.
