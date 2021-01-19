@@ -4,7 +4,7 @@ function setFixedNav() {
   //how much have we scrolled
   //vs
   //how far is the nav from the top of the parent element (e.g. body)
-  console.log(this.scrollY, navOffsetTop);
+  console.log(this.scrollY, nav.offsetTop);
   //when we scrolled more than the distance of the nav from the top
   //we fix the nav
   if (window.scrollY >= nav.offsetTop) {

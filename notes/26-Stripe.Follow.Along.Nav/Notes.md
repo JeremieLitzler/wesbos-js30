@@ -20,8 +20,10 @@ The nav contains:
   - the link on which we want to listen to
   - the content to show when the link is hovered.
 
-## BONUS: fix the bug of the initial event
+## BONUS: enable keyboard navigation
 
-When I hover a menu link for the first time, you see it slide in, which is not so nice.
+When I use the keyboard, I can navigate through the menu and show on focus of the link.
 
-I have fix it by adding the `open` class to the background on transitionend.
+## BONUS 2: focus trap to navigate in the submenu when it contains link elements
+
+I haven't achieved this yet.
