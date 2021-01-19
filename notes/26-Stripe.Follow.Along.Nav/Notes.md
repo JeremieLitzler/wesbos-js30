@@ -27,3 +27,19 @@ When I use the keyboard, I can navigate through the menu and show on focus of th
 ## BONUS 2: focus trap to navigate in the submenu when it contains link elements
 
 I haven't achieved this yet.
+However, [checkout Stripe's JS](https://b.stripecdn.com/mkt/assets/SiteHeader-a7b40e0e.js) and the following methods:
+
+- handleMenuEntered
+- handleMenuLeft
+- handleMenuTransitionEnd
+- handleMenuButtonClicked
+- handleTriggerClicked
+- handleTriggerEntered
+- handleTriggerLeft
+- handleTriggerFocused
+- handleEscape
+- toggleDropdown
+- registerArrowKeyNavigation <==
+- unregisterArrowKeyNavigation <==
+- openDropdown
+- closeDropdown
