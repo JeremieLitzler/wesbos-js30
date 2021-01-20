@@ -1,3 +1,6 @@
+const keyMap = { TAB: 9, ENTER: 13, UP: 38, DOWN: 40, ESCAPE: 27 };
+console.table(keyMap);
+
 const background = document.querySelector('.dropdownBackground');
 const arrow = document.querySelector('.arrow');
 //we want to only select the direct li under "".cool" class
@@ -65,6 +68,7 @@ function showMenu(event) {
   menu.classList.add('trigger-enter-active');
   background.classList.add('open');
   if (event.type === 'focus') {
+    console.log(event);
     //set focus on first A element in the menu, if any
     console.dir(menuContents);
     event.preventDefault();
@@ -81,14 +85,31 @@ function showBackground(event) {
   if (event.propertyName !== 'transform') return;
 }
 
-function hideMenu() {
+function hideMenu(menuOpened) {
   const menu = getMenu(this);
   menu.classList.remove('trigger-enter-active', 'trigger-enter');
   background.classList.remove('open');
 }
 
+function setMenuTrap(event) {
+  console.log(event);
+  console.log('Key:', event.keyCode, event.key);
+  const openedMenu = document.querySelector('.trigger-enter-active');
+  if (openedMenu === null) {
+    console.info('no menu opened');
+    return;
+  }
+  const menuLinks = openedMenu.querySelectorAll('a');
+  if (menuLinks === null || menuLinks.length === 0) {
+    console.info('no link in opened menu');
+    return;
+  }
+  console.log("Let's setup the focus trap");
+}
+
 menus.forEach((li) => li.addEventListener('mouseenter', showMenu));
-menuLinks.forEach((li) => li.addEventListener('focus', showMenu));
+//menuLinks.forEach((li) => li.addEventListener('focus', showMenu));
 menus.forEach((li) => li.addEventListener('mouseleave', hideMenu));
-menuLinks.forEach((li) => li.addEventListener('focusout', hideMenu));
+//menuLinks.forEach((li) => li.addEventListener('focusout', hideMenu));
+window.addEventListener('keydown', setMenuTrap);
 background.addEventListener('transitionend', showBackground);
