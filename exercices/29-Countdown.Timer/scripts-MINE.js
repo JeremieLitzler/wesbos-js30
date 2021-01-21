@@ -53,6 +53,7 @@ function launchTimer(timerVal) {
     const secondsLeft = Math.round((endTime - Date.now()) / 1000);
     if (secondsLeft < 0) {
       clearInterval(countDown);
+      return;
     }
 
     displayTimer(secondsLeft);
