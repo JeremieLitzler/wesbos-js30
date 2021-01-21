@@ -11,6 +11,11 @@ console.assert(endTime !== null, 'no paragraph found');
 //hold the setInterval returned value
 let countDown;
 
+/**
+ * Display the time when the time will end.
+ *
+ * @param {double} timestamp milliseconds timestamp
+ */
 function displayEndTime(timestamp) {
   const time = new Date(timestamp);
   console.log(
@@ -29,8 +34,13 @@ function displayEndTime(timestamp) {
     ${hoursInt > 9 ? '' : '0'}${hoursInt}:${
     minutesInt > 9 ? '' : '0'
   }${minutesInt}`;
-  //console.log('End:', hoursInt, minutesInt);
 }
+
+/**
+ * Display the timer value, e.g. minutes and seconds left
+ *
+ * @param {int} timerVal the timer value in seconds
+ */
 function displayTimer(timerVal) {
   const minutes = Math.floor(timerVal / 60);
   const remainderSeconds = timerVal % 60;
@@ -41,6 +51,11 @@ function displayTimer(timerVal) {
   timeLeft.textContent = display;
 }
 
+/**
+ * Create the timestamp, call the display functions and launch the timer.
+ *
+ * @param {int} timerVal the timer value in seconds
+ */
 function launchTimer(timerVal) {
   clearInterval(countDown);
   const endTime = Date.now() + timerVal * 1000;
@@ -60,13 +75,20 @@ function launchTimer(timerVal) {
     //console.timeEnd(intervalCost);
   }, 1000);
 }
+
+/**
+ * Read the preset value before launching the timer
+ * @param {Object} event Click event on timer presets
+ */
 function setTimer(event) {
   const timerVal = this.dataset.time;
   console.log('Timer value:', timerVal);
   launchTimer(timerVal);
 }
 
+//Click handlers
 timers.forEach((timer) => timer.addEventListener('click', setTimer));
+//Form submit handler
 form.addEventListener('submit', function (event) {
   event.preventDefault(); //prevent reload for the form submission
   const timerVal = this.minutes.value * 60;
