@@ -22,4 +22,4 @@ I have use [Math.random](https://developer.mozilla.org/fr/docs/Web/JavaScript/Re
 - the random index in the mole list
   - I needed to pick a value from 0 to 5 in the list of six holes where the moles are.
 - the random show time
-  - I chose to pick a value between 200ms and 2000ms.
+  - I chose to pick a value between 200ms and 1000ms.
