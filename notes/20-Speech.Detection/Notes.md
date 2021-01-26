@@ -1,6 +1,6 @@
 # Webcam fun
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../19-Webcam.Fun/Notes.md) |
 [View next exercice's notes >](../21-Geolocation/Notes.md)
 

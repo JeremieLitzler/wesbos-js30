@@ -1,6 +1,6 @@
 # Adding Up Times with Reduce
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../17-Sort.Without.Articles/Notes.md) |
 [View next exercice's notes >](../19-Webcam.Fun/Notes.md)
 

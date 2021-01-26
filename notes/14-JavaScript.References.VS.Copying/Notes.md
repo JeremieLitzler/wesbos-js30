@@ -1,6 +1,6 @@
 # JavaScript References VS Copying
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../13-Slide.in.on.Scroll/Notes.md) |
 [View next exercice's notes >](../15-LocalStorage/Notes.md)
 

@@ -1,6 +1,6 @@
 # Array Cardio Day 1
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../03-CSS.Variables/Notes.md) |
 [View next exercice's notes >](../05-Flex.Panel.Gallery/Notes.md)
 

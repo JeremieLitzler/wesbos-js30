@@ -1,6 +1,6 @@
 # Video Speed Controller
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../27-Click.and.Drag/Notes.md) |
 [View next exercice's notes >](../29-Countdown.Timer/Notes.md)
 

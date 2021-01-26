@@ -1,6 +1,6 @@
 # Whack a mole
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../29-Countdown.Timer/Notes.md)
 
 ## Instructions

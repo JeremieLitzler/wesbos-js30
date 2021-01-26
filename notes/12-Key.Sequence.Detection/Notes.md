@@ -1,6 +1,6 @@
 # Key sequence detection
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../11-Custom.Video.Player/Notes.md) |
 [View next exercice's notes >](../13-Slide.in.on.Scroll/Notes.md)
 

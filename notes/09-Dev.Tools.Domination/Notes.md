@@ -1,6 +1,6 @@
 # Dev Tools Domination
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../08-Fun.with.HTML5.Canvas/Notes.md) |
 [View next exercice's notes >](../10-Hold.Shift.and.Check.Checkboxes/Notes.md)
 

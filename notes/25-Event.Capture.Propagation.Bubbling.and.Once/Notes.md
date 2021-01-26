@@ -1,6 +1,6 @@
 # Event Capture, Propagation, Bubbling and Once
 
-[< Back to table of content](../README.md) |
+[< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../24-Sticky.Nav/Notes.md) |
 [View next exercice's notes >](../26-Stripe.Follow.Along.Nav/Notes.md)
 
