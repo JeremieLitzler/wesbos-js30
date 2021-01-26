@@ -1,5 +1,7 @@
 # DevTools console logs
 
+[< Go back](Notes.md).
+
 NB: the milliseconds are in between brakets.
 
 ## Attempt 1

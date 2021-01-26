@@ -1,4 +1,4 @@
-# Notes
+# JS and CSS Clock
 
 [< Back to table of content](../../README.md) |
 [View previous exercice's notes >](../01-JavaScript.Drum.Kit/Notes.md) |
